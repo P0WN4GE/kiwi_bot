@@ -1,0 +1,28 @@
+{
+  "name": "kiwi_bot",
+  "version": "1.0.0",
+  "description": "A custom discord bot for the kiwiipeach community",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ascii-table": "^0.0.9",
+    "axios": "^1.2.2",
+    "body-parser": "^1.20.1",
+    "discord.js": "^14.7.1",
+    "express": "^4.18.2",
+    "humanize-duration": "^3.28.0",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.40",
+    "mongoose": "^6.8.4",
+    "node-tweet-stream": "^2.1.0",
+    "twitter-v2": "^1.1.0",
+    "winston": "^3.8.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.31.0"
+  }
+}
