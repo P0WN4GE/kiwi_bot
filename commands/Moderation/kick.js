@@ -83,7 +83,7 @@ module.exports = {
 
 		}
 		else {
-			await interaction.reply({ content: 'Insufficient permissions', ephemeral: true });
+			await interaction.reply({ content: 'You do not have permission to run this command, if you believe this is an error please contact an Admin', ephemeral: true });
 		}
 
 	},

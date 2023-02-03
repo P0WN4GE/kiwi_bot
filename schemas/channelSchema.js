@@ -5,4 +5,4 @@ const channelSchema = new mongoose.Schema({
 	ChannelID: String,
 });
 
-const MessageModel = module.exports = mongoose.model('channelSchema', channelSchema);
+module.exports = mongoose.model('channelSchema', channelSchema);

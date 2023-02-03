@@ -12,7 +12,7 @@ Custom Discord Bot for Kiwiipeach Discord server
   - [ ] update userinfo cmd
 
 ### In progress
-- [ ]  
+- [ ] Moderation commands  
 
 ### Completed ✓
 - [x] Twitch integration with live embed support 

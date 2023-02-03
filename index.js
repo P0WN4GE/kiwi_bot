@@ -1,5 +1,5 @@
 // Require the necessary discord.js classes
-const { Client, Events, GatewayIntentBits, Collection, ActivityType, Partials } = require('discord.js');
+const { Client, Events, GatewayIntentBits, Collection, ActivityType, Partials, EmbedBuilder } = require('discord.js');
 const config = require('./config.json');
 
 const fs = require('node:fs');
@@ -317,6 +317,90 @@ TwitchMonitor.onChannelOffline((streamData) => {
 	StreamActivity.setChannelOffline(streamData);
 });
 
+// -- Leveling System -------------------------------------------------------------------------------------------------
+
+const levelSchema = require('./schemas/levelSchema.js');
+const talkedRecently = new Set();
+const xpCooldown = 10000;
+
+client.on(Events.MessageCreate, async (message) => {
+
+	const guild = message.guild;
+	const author = message.author;
+
+	if (!guild || author.bot) return;
+
+	levelSchema.findOne({ guildId: guild.id, userId: author.id }, async (err, data) => {
+		if (err) throw err;
+		if (!data) {
+			levelSchema.create({
+				guildId: guild.id,
+				userId: author.id,
+				xp: 0,
+				level: 0,
+			});
+		}
+	});
+
+	const channel = message.channel;
+
+	const give = getRandomInt(1, 5);
+
+	const data = await levelSchema.findOne({ guildId: guild.id, userId: author.id });
+
+	if (!data) return;
+
+	const requiredXp = data.level * data.level * 20 + 30;
+
+	if (talkedRecently.has(author.id)) {
+		return;
+	}
+	else {
+		if (data.xp + give >= requiredXp) {
+			data.xp += give;
+			data.level += 1;
+			await data.save();
+
+			if (!channel) return;
+
+			const embed = new EmbedBuilder()
+				.setColor('Blue')
+				.setDescription(`${author}, you have reached level ${data.level}!`);
+
+			await author.send({ embeds: [embed] });
+		}
+		else {
+			data.xp += give;
+			await data.save();
+		}
+
+		talkedRecently.add(author.id);
+		setTimeout(() => {
+			talkedRecently.delete(author.id, Date.now() + xpCooldown);
+		}, xpCooldown,
+		);
+	}
+
+	// if (data.xp + give >= requiredXp) {
+	// 	data.xp += give;
+	// 	data.level += 1;
+	// 	await data.save();
+
+	// 	if (!channel) return;
+
+	// 	const embed = new EmbedBuilder()
+	// 		.setColor('Blue')
+	// 		.setDescription(`${author}, you have reached level ${data.level}!`);
+
+	// 	await author.send({ embeds: [embed] });
+	// }
+	// else {
+	// 	data.xp += give;
+	// 	await data.save();
+	// }
+
+});
+
 
 // -- Function Prototypes ---------------------------------------------------------------------------------------------
 
@@ -338,3 +422,9 @@ Array.prototype.hasEqualValues = function(b) {
 
 	return true;
 };
+
+function getRandomInt(min, max) {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min) + min);
+}
