@@ -26,6 +26,6 @@ module.exports = {
 				await interaction.reply({ content: message_count + ' messages successfully deleted', ephemeral: true });
 			}
 		}
-		else {await interaction.reply({ content: 'Insufficient Permissions', ephemeral: true });}
+		else {await interaction.reply({ content: 'You do not have permission to run this command, if you believe this is an error please contact an Admin', ephemeral: true });}
 	},
 };
